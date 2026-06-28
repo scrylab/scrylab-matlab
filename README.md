@@ -10,7 +10,7 @@ MATLAB wrapper for the [ScryLab](https://scrylab.de) REST API. Lets you send sig
 
 ## Requirements
 
-- MATLAB R2019b or later
+- MATLAB R2023a or later
 - ScryLab desktop app running on the same machine ([Installation Guide](https://docs.scrylab.de/docs/getting-started/installation/))
 
 ## Installation
