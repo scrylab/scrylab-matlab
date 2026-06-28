@@ -1,0 +1,21 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: matlab-actions/setup-matlab@v3
+      - uses: matlab-actions/run-command@v3
+        with:
+          command: package
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: ScryLab.mltbx
