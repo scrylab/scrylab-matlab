@@ -1,6 +1,6 @@
 # scrylab-matlab
 
-MATLAB wrapper for the [ScryLab](https://scrylab.de) REST API. Lets you send signals directly into a running ScryLab GUI from any MATLAB environment – scripts, Live Scripts, Simulink models or measurement pipelines – as a faster, more interactive alternative to MATLAB figures for exploratory signal analysis.
+MATLAB wrapper for the [ScryLab](https://scrylab.de) REST API. Lets you send signals directly into a running ScryLab GUI from any MATLAB environment – scripts or simulation pipelines – as a faster, more interactive alternative to MATLAB figures for exploratory signal analysis.
 
 ## What you can do
 
