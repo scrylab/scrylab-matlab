@@ -1,6 +1,11 @@
 # scrylab-matlab
 
 [![View ScryLab Plotter on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/184152-scrylab-plotter)
+[![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=scrylab/scrylab-matlab)
+
+[![GitHub release](https://img.shields.io/github/v/release/scrylab/scrylab-matlab)](https://github.com/scrylab/scrylab-matlab/releases)
+![License](https://img.shields.io/github/license/scrylab/scrylab-matlab)
+![MATLAB](https://img.shields.io/badge/MATLAB-R2023a%2B-orange)
 
 MATLAB wrapper for the [ScryLab](https://scrylab.de) REST API. Lets you plot signals directly in a running ScryLab GUI from any MATLAB environment – scripts or simulation pipelines – as a faster, more interactive alternative to MATLAB figures for exploratory signal analysis.
 
