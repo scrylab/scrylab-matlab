@@ -62,7 +62,7 @@ scry.send(y, name="Speed", source="Testrun 01", x=t, y_unit="km/h", x_unit="s")
 | `name` | Signal name (auto-generated if omitted) |
 | `source` | [Data source](https://docs.scrylab.de/docs/concepts/data-sources/) to send into, default `"Sent from API"`; created automatically if it doesn't exist |
 | `x` | X-axis values; auto-generated if omitted |
-| `z` | ~~Color axis (1D vector)~~ (coming soon) or spectrogram (2D matrix) |
+| `z` | Color axis (1D vector) or spectrogram (2D matrix) |
 | `y_unit`, `x_unit`, `z_unit` | Axis units, e.g. `"V"`, `"s"`, `"Hz"` |
 | `overwrite` | Replace an existing signal with the same name (default: `false`) |
 
@@ -84,7 +84,7 @@ scry.send_many( ...
 | `names` | Cell array of signal names; auto-generated if omitted |
 | `source` | Data source (same as `scry.send`) |
 | `x` | Single x-axis vector broadcast to all signals, or a cell array (one per signal) |
-| `z` | ~~1D colored trace~~ (coming soon) or 2D spectrogram – single value broadcast to all, or cell array (one per signal) |
+| `z` | 1D colored trace or 2D spectrogram – single value broadcast to all, or cell array (one per signal) |
 | `y_unit`, `x_unit`, `z_unit` | Single string broadcast to all, or cell array (one per signal) |
 | `overwrite` | Replace existing signals with the same name (default: `false`) |
 
