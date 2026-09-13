@@ -9,7 +9,7 @@ function package()
     opts = matlab.addons.toolbox.ToolboxOptions(root, identifier);
 
     opts.ToolboxName    = "ScryLab";
-    opts.ToolboxVersion = "0.1.0";
+    opts.ToolboxVersion = "0.2.0";
     opts.AuthorName     = "ScryLab";
     opts.AuthorEmail    = "support@scrylab.de";
     opts.AuthorCompany  = "ScryLab";
