@@ -2,7 +2,7 @@ function ensure_version(base_url)
 %ENSURE_VERSION  Verify the running ScryLab app is new enough.
 %   Checks once per base_url; subsequent calls return immediately.
 
-    min_version = '0.1.10';
+    min_version = '0.2.9';
 
     persistent checked_url
     if strcmp(checked_url, base_url), return; end

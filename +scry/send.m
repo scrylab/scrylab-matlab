@@ -8,7 +8,8 @@ function send(y, options)
 %   ---
 %   name      Signal name (default: auto-generated)
 %   source    Data source name, created if absent (default: "Sent from API")
-%   x         X-axis values; auto-generated if omitted
+%   x         X-axis values; auto-generated if omitted. A datetime array
+%             yields a calendar (date) axis.
 %   z         Spectrogram matrix (2D); optional (1D color axis coming soon)
 %   y_unit    Y-axis unit, e.g. "V"
 %   x_unit    X-axis unit, e.g. "s"
@@ -35,7 +36,8 @@ function send(y, options)
     base_url  = api_base_url();
     name      = default_name(char(options.name), 1);
     source_id = resolve_source(base_url, char(options.source));
-    meta      = build_meta(name, source_id, char(options.y_unit), char(options.x_unit), char(options.z_unit), options.overwrite);
+    [x, x_epoch] = coerce_x_datetime(options.x);
+    meta      = build_meta(name, source_id, char(options.y_unit), char(options.x_unit), char(options.z_unit), options.overwrite, x_epoch);
 
-    upload_batch(base_url, {double(y)}, {options.x}, {options.z}, {meta});
+    upload_batch(base_url, {double(y)}, {x}, {options.z}, {meta});
 end

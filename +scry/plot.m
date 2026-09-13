@@ -26,9 +26,10 @@ function plot(y, options)
     base_url  = api_base_url();
     name      = default_name(char(options.name), 1);
     source_id = resolve_source(base_url, 'Sent from API');
-    meta      = build_meta(name, source_id, char(options.y_unit), char(options.x_unit), char(options.z_unit), options.overwrite);
+    [x, x_epoch] = coerce_x_datetime(options.x);
+    meta      = build_meta(name, source_id, char(options.y_unit), char(options.x_unit), char(options.z_unit), options.overwrite, x_epoch);
 
-    ids = upload_batch(base_url, {double(y)}, {options.x}, {options.z}, {meta});
+    ids = upload_batch(base_url, {double(y)}, {x}, {options.z}, {meta});
 
     http_post_json(base_url, '/api/plot', struct('signal_id', ids{1}));
 end

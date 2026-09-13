@@ -53,17 +53,22 @@ function send_many(y, options)
     x_units = broadcast_str(options.x_unit, n);
     z_units = broadcast_str(options.z_unit, n);
 
+    x_epochs = cell(1, n);
+    for i = 1:n
+        [xs{i}, x_epochs{i}] = coerce_x_datetime(xs{i});
+    end
+
     ys_dbl = cellfun(@double, y, 'UniformOutput', false);
-    metas  = cellfun(@(name, yu, xu, zu) ...
-        build_meta(name, source_id, yu, xu, zu, options.overwrite), ...
-        names, y_units, x_units, z_units, 'UniformOutput', false);
+    metas  = cellfun(@(name, yu, xu, zu, xe) ...
+        build_meta(name, source_id, yu, xu, zu, options.overwrite, xe), ...
+        names, y_units, x_units, z_units, x_epochs, 'UniformOutput', false);
 
     upload_batch(base_url, ys_dbl, xs, zs, metas);
 end
 
 
 function out = broadcast_val(val, n)
-    if isempty(val) || (isnumeric(val) && ~iscell(val))
+    if isempty(val) || isnumeric(val) || isdatetime(val)
         out = repmat({val}, 1, n);
     elseif iscell(val) && numel(val) == n
         out = val;
