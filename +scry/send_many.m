@@ -17,8 +17,10 @@ function send_many(y, options)
 %   z_unit    Single unit string or cell array, one per signal
 %   overwrite Replace existing signals with the same name (default: false)
 %   x_domain  What the x-axis represents ("time", "frequency", ...),
-%             single string or cell array – see scry.send. For XY
-%             signals with a master axis use scry.send.
+%             single string or cell array – see scry.send
+%   master    Master axis, single vector broadcast to all signals or
+%             cell array – see scry.send
+%   master_domain  Single string or cell array – see scry.send
 %
 %   Example
 %   ---
@@ -37,6 +39,8 @@ function send_many(y, options)
         options.z_unit                  = ""
         options.overwrite (1,1) logical = false
         options.x_domain                = ""
+        options.master                  = {}
+        options.master_domain           = ""
     end
 
     if ~iscell(y)
@@ -53,22 +57,28 @@ function send_many(y, options)
     names   = broadcast_names(options.names, n);
     xs      = broadcast_val(options.x, n);
     zs      = broadcast_val(options.z, n);
-    y_units   = broadcast_str(options.y_unit, n);
-    x_units   = broadcast_str(options.x_unit, n);
-    z_units   = broadcast_str(options.z_unit, n);
-    x_domains = broadcast_str(options.x_domain, n);
+    masters = broadcast_val(options.master, n);
+    y_units        = broadcast_str(options.y_unit, n);
+    x_units        = broadcast_str(options.x_unit, n);
+    z_units        = broadcast_str(options.z_unit, n);
+    x_domains      = broadcast_str(options.x_domain, n);
+    master_domains = broadcast_str(options.master_domain, n);
 
-    x_epochs = cell(1, n);
+    x_epochs      = cell(1, n);
+    master_epochs = cell(1, n);
     for i = 1:n
         [xs{i}, x_epochs{i}] = coerce_x_datetime(xs{i});
+        [masters{i}, master_epochs{i}] = coerce_x_datetime(masters{i});
     end
 
     ys_dbl = cellfun(@double, y, 'UniformOutput', false);
-    metas  = cellfun(@(name, yu, xu, zu, xe, xd) ...
-        build_meta(name, source_id, yu, xu, zu, options.overwrite, 'x_epoch', xe, 'x_domain', xd), ...
-        names, y_units, x_units, z_units, x_epochs, x_domains, 'UniformOutput', false);
+    metas  = cellfun(@(name, yu, xu, zu, xe, xd, me, md) ...
+        build_meta(name, source_id, yu, xu, zu, options.overwrite, ...
+                   'x_epoch', xe, 'x_domain', xd, 'master_epoch', me, 'master_domain', md), ...
+        names, y_units, x_units, z_units, x_epochs, x_domains, master_epochs, master_domains, ...
+        'UniformOutput', false);
 
-    upload_batch(base_url, ys_dbl, xs, zs, metas, repmat({[]}, 1, n));
+    upload_batch(base_url, ys_dbl, xs, zs, metas, masters);
 end
 
 
@@ -78,7 +88,7 @@ function out = broadcast_val(val, n)
     elseif iscell(val) && numel(val) == n
         out = val;
     else
-        error('scrylab:invalidInput', 'x/z must be a single value or a cell array of length n.');
+        error('scrylab:invalidInput', 'x/z/master must be a single value or a cell array of length n.');
     end
 end
 

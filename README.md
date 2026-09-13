@@ -61,7 +61,7 @@ scry.send(y, name="Speed", source="Testrun 01", x=t, y_unit="km/h", x_unit="s")
 | `y` | Numeric vector or matrix (required) |
 | `name` | Signal name (auto-generated if omitted) |
 | `source` | [Data source](https://docs.scrylab.de/docs/concepts/data-sources/) to send into, default `"Sent from API"`; created automatically if it doesn't exist |
-| `x` | X-axis values; auto-generated if omitted |
+| `x` | X-axis values; auto-generated if omitted. A `datetime` array yields a calendar (date) axis |
 | `z` | Color axis (1D vector) or spectrogram (2D matrix) |
 | `y_unit`, `x_unit`, `z_unit` | Axis units, e.g. `"V"`, `"s"`, `"Hz"` |
 | `x_domain` | What the x-axis represents: `"time"`, `"frequency"`, `"parametric"` (x is another measured channel) or a custom quantity like `"distance"`. Needed for cursor sync and source-wide operations. Convention: values in s / Hz / m |
@@ -86,10 +86,12 @@ scry.send_many( ...
 | `y` | Cell array of numeric arrays – one cell per signal |
 | `names` | Cell array of signal names; auto-generated if omitted |
 | `source` | Data source (same as `scry.send`) |
-| `x` | Single x-axis vector broadcast to all signals, or a cell array (one per signal) |
+| `x` | Single x-axis vector broadcast to all signals, or a cell array (one per signal). A `datetime` array yields a calendar (date) axis |
 | `z` | 1D colored trace or 2D spectrogram – single value broadcast to all, or cell array (one per signal) |
 | `y_unit`, `x_unit`, `z_unit` | Single string broadcast to all, or cell array (one per signal) |
 | `x_domain` | What the x-axis represents, single string broadcast to all or cell array (one per signal) – see `scry.send` |
+| `master` | Master axis, single vector broadcast to all signals or cell array (one per signal) – see `scry.send` |
+| `master_domain` | Single string broadcast to all, or cell array (one per signal) – see `scry.send` |
 | `overwrite` | Replace existing signals with the same name (default: `false`) |
 
 ### `scry.plot(y, Name=Value, …)`
