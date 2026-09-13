@@ -16,6 +16,9 @@ function send_many(y, options)
 %   x_unit    Single unit string or cell array, one per signal
 %   z_unit    Single unit string or cell array, one per signal
 %   overwrite Replace existing signals with the same name (default: false)
+%   x_domain  What the x-axis represents ("time", "frequency", ...),
+%             single string or cell array – see scry.send. For XY
+%             signals with a master axis use scry.send.
 %
 %   Example
 %   ---
@@ -33,6 +36,7 @@ function send_many(y, options)
         options.x_unit                  = ""
         options.z_unit                  = ""
         options.overwrite (1,1) logical = false
+        options.x_domain                = ""
     end
 
     if ~iscell(y)
@@ -49,9 +53,10 @@ function send_many(y, options)
     names   = broadcast_names(options.names, n);
     xs      = broadcast_val(options.x, n);
     zs      = broadcast_val(options.z, n);
-    y_units = broadcast_str(options.y_unit, n);
-    x_units = broadcast_str(options.x_unit, n);
-    z_units = broadcast_str(options.z_unit, n);
+    y_units   = broadcast_str(options.y_unit, n);
+    x_units   = broadcast_str(options.x_unit, n);
+    z_units   = broadcast_str(options.z_unit, n);
+    x_domains = broadcast_str(options.x_domain, n);
 
     x_epochs = cell(1, n);
     for i = 1:n
@@ -59,11 +64,11 @@ function send_many(y, options)
     end
 
     ys_dbl = cellfun(@double, y, 'UniformOutput', false);
-    metas  = cellfun(@(name, yu, xu, zu, xe) ...
-        build_meta(name, source_id, yu, xu, zu, options.overwrite, xe), ...
-        names, y_units, x_units, z_units, x_epochs, 'UniformOutput', false);
+    metas  = cellfun(@(name, yu, xu, zu, xe, xd) ...
+        build_meta(name, source_id, yu, xu, zu, options.overwrite, 'x_epoch', xe, 'x_domain', xd), ...
+        names, y_units, x_units, z_units, x_epochs, x_domains, 'UniformOutput', false);
 
-    upload_batch(base_url, ys_dbl, xs, zs, metas);
+    upload_batch(base_url, ys_dbl, xs, zs, metas, repmat({[]}, 1, n));
 end
 
 

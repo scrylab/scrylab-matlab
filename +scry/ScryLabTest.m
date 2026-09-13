@@ -21,24 +21,34 @@ classdef ScryLabTest < matlab.unittest.TestCase
         end
 
         function test_build_meta_minimal(tc)
-            meta = build_meta('Speed', 'src-123', '', '', '', false, []);
+            meta = build_meta('Speed', 'src-123', '', '', '', false);
             tc.verifyEqual(meta.name, 'Speed');
             tc.verifyEqual(meta.target_source_id, 'src-123');
             tc.verifyFalse(isfield(meta, 'y_unit'));
             tc.verifyFalse(isfield(meta, 'overwrite'));
             tc.verifyFalse(isfield(meta, 'x_epoch'));
+            tc.verifyFalse(isfield(meta, 'x_domain'));
+            tc.verifyFalse(isfield(meta, 'master_epoch'));
         end
 
         function test_build_meta_with_units(tc)
-            meta = build_meta('Voltage', 'src-456', 'V', 's', '', false, []);
+            meta = build_meta('Voltage', 'src-456', 'V', 's', '', false);
             tc.verifyEqual(meta.y_unit, 'V');
             tc.verifyEqual(meta.x_unit, 's');
             tc.verifyFalse(isfield(meta, 'z_unit'));
         end
 
         function test_build_meta_overwrite(tc)
-            meta = build_meta('Sig', 'src-1', '', '', '', true, []);
+            meta = build_meta('Sig', 'src-1', '', '', '', true);
             tc.verifyTrue(meta.overwrite);
+        end
+
+        function test_build_meta_master(tc)
+            meta = build_meta('Sig', 'src-1', '', '', '', false, ...
+                x_domain='parametric', master_epoch=1750000000, master_domain='time');
+            tc.verifyEqual(meta.x_domain, 'parametric');
+            tc.verifyEqual(meta.master_epoch, 1750000000);
+            tc.verifyEqual(meta.master_domain, 'time');
         end
 
         function test_coerce_numeric_x_unchanged(tc)
@@ -53,7 +63,7 @@ classdef ScryLabTest < matlab.unittest.TestCase
             [x, epoch] = coerce_x_datetime(t);
             tc.verifyEqual(x, [0 1 2]);
             tc.verifyEqual(epoch, posixtime(t0), "AbsTol", 1e-6);
-            meta = build_meta('S', 'src', '', 's', '', false, epoch);
+            meta = build_meta('S', 'src', '', 's', '', false, x_epoch=epoch);
             tc.verifyEqual(meta.x_epoch, posixtime(t0), "AbsTol", 1e-6);
         end
 

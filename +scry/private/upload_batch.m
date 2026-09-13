@@ -1,5 +1,6 @@
-function signal_ids = upload_batch(base_url, ys, xs, zs, metas)
+function signal_ids = upload_batch(base_url, ys, xs, zs, metas, masters)
 %UPLOAD_BATCH  Save signals as .mat files and POST to /api/signals/upload_batch.
+%   masters: cell array, one master-axis vector (or []) per signal.
 
     import matlab.net.*
     import matlab.net.http.*
@@ -11,7 +12,7 @@ function signal_ids = upload_batch(base_url, ys, xs, zs, metas)
 
     for i = 1:n
         tmp_paths{i} = [tempname '.mat'];
-        save_signal_mat(tmp_paths{i}, ys{i}, xs{i}, zs{i});
+        save_signal_mat(tmp_paths{i}, ys{i}, xs{i}, zs{i}, masters{i});
     end
 
     % A FileProvider array repeats the 'file' field once per element.
@@ -56,12 +57,13 @@ function signal_ids = upload_batch(base_url, ys, xs, zs, metas)
 end
 
 
-function save_signal_mat(path, y_in, x_in, z_in)
-    % Variable names must be y/x/z – the backend reads them by name.
+function save_signal_mat(path, y_in, x_in, z_in, master_in)
+    % Variable names must be y/x/z/master – the backend reads them by name.
     y    = double(y_in);  %#ok<NASGU>
     vars = {'y'};
     if ~isempty(x_in), x = double(x_in); vars{end+1} = 'x'; end  %#ok<NASGU>
     if ~isempty(z_in), z = double(z_in); vars{end+1} = 'z'; end  %#ok<NASGU>
+    if ~isempty(master_in), master = double(master_in); vars{end+1} = 'master'; end  %#ok<NASGU>
     save(path, vars{:}, '-v7');
 end
 

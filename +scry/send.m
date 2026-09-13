@@ -15,6 +15,14 @@ function send(y, options)
 %   x_unit    X-axis unit, e.g. "s"
 %   z_unit    Z-axis unit, e.g. "dB"
 %   overwrite Replace existing signal with the same name (default: false)
+%   x_domain  What the x-axis represents: "time", "frequency", or a
+%             custom quantity like "distance". Needed for cursor sync
+%             and source-wide operations. Values in s/Hz/m.
+%   master    Master axis for XY/scatter curves: one value per sample
+%             (same length as y), e.g. the timestamp of each point.
+%             Enables cursor sync; implies x_domain="parametric".
+%             A datetime master anchors the curve in absolute time.
+%   master_domain  What the master measures (default "time")
 %
 %   Example
 %   ---
@@ -31,13 +39,19 @@ function send(y, options)
         options.x_unit    (1,1) string  = ""
         options.z_unit    (1,1) string  = ""
         options.overwrite (1,1) logical = false
+        options.x_domain  (1,1) string  = ""
+        options.master                  = []
+        options.master_domain (1,1) string = ""
     end
 
     base_url  = api_base_url();
     name      = default_name(char(options.name), 1);
     source_id = resolve_source(base_url, char(options.source));
     [x, x_epoch] = coerce_x_datetime(options.x);
-    meta      = build_meta(name, source_id, char(options.y_unit), char(options.x_unit), char(options.z_unit), options.overwrite, x_epoch);
+    [master, master_epoch] = coerce_x_datetime(options.master);
+    meta      = build_meta(name, source_id, char(options.y_unit), char(options.x_unit), char(options.z_unit), options.overwrite, ...
+                           x_epoch=x_epoch, x_domain=char(options.x_domain), ...
+                           master_epoch=master_epoch, master_domain=char(options.master_domain));
 
-    upload_batch(base_url, {double(y)}, {x}, {options.z}, {meta});
+    upload_batch(base_url, {double(y)}, {x}, {options.z}, {meta}, {master});
 end

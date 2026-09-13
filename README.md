@@ -64,6 +64,9 @@ scry.send(y, name="Speed", source="Testrun 01", x=t, y_unit="km/h", x_unit="s")
 | `x` | X-axis values; auto-generated if omitted |
 | `z` | Color axis (1D vector) or spectrogram (2D matrix) |
 | `y_unit`, `x_unit`, `z_unit` | Axis units, e.g. `"V"`, `"s"`, `"Hz"` |
+| `x_domain` | What the x-axis represents: `"time"`, `"frequency"`, `"parametric"` (x is another measured channel) or a custom quantity like `"distance"`. Needed for cursor sync and source-wide operations. Convention: values in s / Hz / m |
+| `master` | Master axis for XY/scatter curves: one value per sample (same length as `y`), e.g. the timestamp of each point. Enables draggable trajectory markers and cursor sync; implies `x_domain="parametric"`. A `datetime` master anchors the curve in absolute time |
+| `master_domain` | What the master measures (default `"time"`) |
 | `overwrite` | Replace an existing signal with the same name (default: `false`) |
 
 ### `scry.send_many(y, Name=Value, …)`
@@ -86,6 +89,7 @@ scry.send_many( ...
 | `x` | Single x-axis vector broadcast to all signals, or a cell array (one per signal) |
 | `z` | 1D colored trace or 2D spectrogram – single value broadcast to all, or cell array (one per signal) |
 | `y_unit`, `x_unit`, `z_unit` | Single string broadcast to all, or cell array (one per signal) |
+| `x_domain` | What the x-axis represents, single string broadcast to all or cell array (one per signal) – see `scry.send` |
 | `overwrite` | Replace existing signals with the same name (default: `false`) |
 
 ### `scry.plot(y, Name=Value, …)`
